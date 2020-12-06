@@ -27,18 +27,9 @@ graph_data %>%
   ggplot(aes((-1)*betrag, reorder(short_name, -betrag))) + 
   geom_bar(stat = 'identity')
 
-lebensmittel <- c("rewe sagt", "denns biomarkt", "steinecke s")
-auswaerts_essen <- c("babo sushi")
-drogerie <- c("dm fil")
-auto <- c("bp tankstelle", "adeg 1093", "ah nempitz", "shell 6872", "shell 2404")
-medizin <- c("steinbock apotheke")
-strom <- c("evd energieversorgung")
-urlaub <- c("erlebnisberg nagelkoepfel", "tauern spa")
-geschenke <- c("gefeko berlin")
-kinder <- c("tierpark berlin", "berliner instit", "bezirksamt friedrichshain")
-internet <- c("tele columbus")
+source('categories.R')
 
-categorisation <- data_frame(auftrag=graph_data$short_name)
+categorisation <- tibble(auftrag=graph_data$short_name)
 categorisation_final <- categorisation %>% 
   mutate(category=case_when(auftrag %in% lebensmittel ~ 'lebensmittel',
                             auftrag %in% auswaerts_essen ~ 'auswaerts_essen',
@@ -60,3 +51,4 @@ new_graph_data %>%
   summarise(betrag=sum(betrag)) %>% 
   ggplot(aes((-1)*betrag, reorder(category, -betrag))) + 
   geom_bar(stat = 'identity')
+
