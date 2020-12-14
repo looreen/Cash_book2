@@ -8,6 +8,8 @@
 #
 
 library(shiny)
+source('first script.R')
+source('categories.R')
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -31,7 +33,7 @@ shinyUI(fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            tableOutput('dataframe1')
+            plotOutput('chart1')
         )
     )
 ))
