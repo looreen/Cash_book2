@@ -1,7 +1,8 @@
 lebensmittel <- c("rewe sagt", "denns biomarkt", "steinecke s", 'edeka 5416', 'konsum leipzig')
 auswaerts_essen <- c("babo sushi")
 drogerie <- c("dm fil")
-auto <- c("bp tankstelle", "adeg 1093", "ah nempitz", "shell 6872", "shell 2404", 'jet dankt', 'adac autoversicherung', 'shell 3699')
+auto <- c("bp tankstelle", "adeg 1093", "ah nempitz", "shell 6872", "shell 2404", 'jet dankt', 'adac autoversicherung', 'shell 3699',
+          'jet-tankstelle', 'allg.deutscher')
 medizin <- c("steinbock apotheke", 'apotheke im')
 strom <- c("evd energieversorgung")
 urlaub <- c("erlebnisberg nagelkoepfel", "tauern spa")

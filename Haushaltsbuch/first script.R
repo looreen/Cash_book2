@@ -25,7 +25,7 @@ prepare_original_data <- function(data){
 
   data_prep <- data %>% 
     filter(!verwendungszweck=='Tagessaldo') %>% 
-    mutate(short_name=str_extract_all(pattern = '^[[:alnum:]]*[[:blank:]][[:alnum:]]*', string = auftraggeber_beguenstigter, simplify = T),
+    mutate(short_name=str_extract_all(pattern = '^[[:alnum:]]*([[:blank:]]|\\Q.\\E|-)[[:alnum:]]*', string = auftraggeber_beguenstigter, simplify = T),
            short_name=as.character(short_name),
            short_name=tolower(short_name),
            betrag_eur=str_replace_all(string = betrag_eur, pattern = '\\.', replacement = ''),
@@ -42,17 +42,3 @@ prepare_original_data <- function(data){
 #          betrag_eur=str_replace_all(string = betrag_eur, pattern = ',', replacement = '.'), 
 #          betrag_eur=as.numeric(betrag_eur))
 
-
-categorisation <- tibble(auftrag=graph_data$short_name)
-categorisation_final <- categorisation %>% 
-  mutate(category=case_when(auftrag %in% lebensmittel ~ 'lebensmittel',
-                            auftrag %in% auswaerts_essen ~ 'auswaerts_essen',
-                            auftrag %in% drogerie ~ 'drogerie',
-                            auftrag %in% auto ~ 'auto',
-                            auftrag %in% medizin ~ 'medizin',
-                            auftrag %in% strom ~ 'strom',
-                            auftrag %in% urlaub ~ 'urlaub',
-                            auftrag %in% geschenke ~ 'geschenke',
-                            auftrag %in% kinder ~ 'kinder',
-                            auftrag %in% internet ~ 'internet', 
-                            TRUE ~ 'anderes'))

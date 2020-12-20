@@ -21,17 +21,25 @@ shinyServer(function(input, output) {
         
         prepared_data <- prepare_original_data(raw_data)
         
-        graph_data <- prepared_data %>% 
+        categorisation <- tibble(auftrag=unique(prepared_data$short_name))
+        categorisation_final <- categorisation %>% 
+            mutate(category=case_when(auftrag %in% lebensmittel ~ 'lebensmittel',
+                                      auftrag %in% auswaerts_essen ~ 'auswaerts_essen',
+                                      auftrag %in% drogerie ~ 'drogerie',
+                                      auftrag %in% auto ~ 'auto',
+                                      auftrag %in% medizin ~ 'medizin',
+                                      auftrag %in% strom ~ 'strom',
+                                      auftrag %in% urlaub ~ 'urlaub',
+                                      auftrag %in% geschenke ~ 'geschenke',
+                                      auftrag %in% kinder ~ 'kinder',
+                                      auftrag %in% internet ~ 'internet', 
+                                      TRUE ~ 'anderes'))
+        
+        new_graph_data <- prepared_data %>% 
             filter(betrag_eur<0) %>%
             group_by(short_name) %>% 
             summarise(betrag=sum(betrag_eur)) %>% 
-            mutate(short_name=tolower(short_name))
-        
-        # graph_data %>% 
-        #     ggplot(aes((-1)*betrag, reorder(short_name, -betrag))) + 
-        #     geom_bar(stat = 'identity')
-        
-        new_graph_data <- graph_data %>% 
+            mutate(short_name=tolower(short_name)) %>%
             left_join(categorisation_final, by=c('short_name'='auftrag'))
         
         new_graph_data %>% 
@@ -59,11 +67,31 @@ shinyServer(function(input, output) {
         
         prepared_data <- prepare_original_data(raw_data)
         
+        categorisation <- tibble(auftrag=unique(prepared_data$short_name))
+        categorisation_final <- categorisation %>% 
+            mutate(category=case_when(auftrag %in% lebensmittel ~ 'lebensmittel',
+                                      auftrag %in% auswaerts_essen ~ 'auswaerts_essen',
+                                      auftrag %in% drogerie ~ 'drogerie',
+                                      auftrag %in% auto ~ 'auto',
+                                      auftrag %in% medizin ~ 'medizin',
+                                      auftrag %in% strom ~ 'strom',
+                                      auftrag %in% urlaub ~ 'urlaub',
+                                      auftrag %in% geschenke ~ 'geschenke',
+                                      auftrag %in% kinder ~ 'kinder',
+                                      auftrag %in% internet ~ 'internet', 
+                                      TRUE ~ 'anderes'))
+        
         prepared_data_other <- prepared_data %>% 
             left_join(categorisation_final, by=c('short_name'='auftrag')) %>% 
-            filter(is.na(category), 
+            filter(is.na(category)|category=='anderes', 
                    betrag_eur<0) %>%
             select(buchungstag, auftraggeber_beguenstigter, verwendungszweck, betrag_eur, short_name)
         
+        if (nrow(prepared_data_other)==0){
+            print('Keine unkategorisierten Ausgaben!')
+        } else {
+            prepared_data_other
+        }
+
     })
 })
