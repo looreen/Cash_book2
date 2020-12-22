@@ -46,7 +46,9 @@ shinyServer(function(input, output) {
             group_by(category) %>% 
             summarise(betrag=sum(betrag)) %>% 
             ggplot(aes((-1)*betrag, reorder(category, -betrag))) + 
-            geom_bar(stat = 'identity')
+            geom_bar(stat = 'identity')+
+            theme_minimal()+
+            labs(x='Summe', y='')
         
     })
     
