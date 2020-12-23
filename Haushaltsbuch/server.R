@@ -45,12 +45,19 @@ shinyServer(function(input, output) {
         new_graph_data %>% 
             group_by(category) %>% 
             summarise(betrag=sum(betrag)) %>% 
-            ggplot(aes((-1)*betrag, reorder(category, -betrag))) + 
-            geom_bar(stat = 'identity')+
+            arrange(desc(betrag)) %>% 
+            mutate(category=str_to_title(category),
+                   category=factor(category, levels = category)) %>%
+            ggplot(aes(category, -betrag, label= (paste0(round(-betrag, 0), ' Euro')))) + 
+            geom_text(nudge_y = 20) + 
+            # geom_bar(stat = 'identity')+
+            geom_segment(aes(xend=category, yend=0)) +
+            geom_point(size=4, color="orange") +
+            coord_flip()+
             theme_minimal()+
-            labs(x='Summe', y='')
+            labs(x='', y='',title = 'Ausgaben nach Kategorien')
         
-    })
+     })
     
     output$table1 <- renderTable({
         data_from_input <- input$file1
